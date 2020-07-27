@@ -7,6 +7,10 @@ provider:
   stage: prod # default stage, for multi stage deployment use ${opt:stage, 'dev'}
   versionFunctions: false
 
+  environment:
+    #tmdb
+    TMDB_API_KEY: ${file(./secrets.env.yml):tmdb.TMDB_API_KEY}
+
 functions:
   # get TV show info from themoviedb api
   getTVShowsInfo:
