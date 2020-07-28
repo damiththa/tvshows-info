@@ -7,11 +7,17 @@ import tmdbsimple as tmdb
 TMDB_API_KEY = os.environ['TMDB_API_KEY']
 tmdb.API_KEY = TMDB_API_KEY
 
+# show images
+show_images_dict = {
+    'secure_base_url' : 'https://image.tmdb.org/t/p/',
+    'poster_sizes' : 'w500'
+}
+
 def handler(event, context):
 
     # HARDCODED: 
-    # showID = 65798 # LetterKenny
-    showID = 19885 # Sherlock
+    showID = 65798 # LetterKenny
+    # showID = 19885 # Sherlock
 
 
     tv_show = tmdb.TV(showID)
@@ -26,8 +32,10 @@ def handler(event, context):
     popularity = tv_show.popularity
     user_score = tv_show.vote_average
     show_genres = tv_show.genres # returns a list of dicts. 
+    show_homepage = tv_show.homepage
+    show_poster_url = show_images_dict['secure_base_url'] + show_images_dict['poster_sizes'] + tv_show.poster_path # show poster url
 
-    print (popularity, user_score)
+    print (show_poster_url)
 
 
     # TODO: make this more meaningful
