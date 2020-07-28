@@ -15,34 +15,36 @@ show_images_dict = {
 
 def handler(event, context):
 
-    # HARDCODED: 
+    # HARDCODED: for now
     showID = 65798 # LetterKenny
     # showID = 19885 # Sherlock
 
-
+    # tv show object
     tv_show = tmdb.TV(showID)
     res = tv_show.info()
 
-    # interested attributes
-    show_name = tv_show.name
-    show_overview = tv_show.overview
-    show_status = tv_show.status
-    number_of_episodes = tv_show.number_of_episodes
-    number_of_seasons = tv_show.number_of_seasons
-    popularity = tv_show.popularity
-    user_score = tv_show.vote_average
-    show_genres = tv_show.genres # returns a list of dicts. 
-    show_homepage = tv_show.homepage
-    show_poster_url = show_images_dict['secure_base_url'] + show_images_dict['poster_sizes'] + tv_show.poster_path # show poster url
+    tv_show_info_dict = {} # dict. to hold interested attributes for THIS TV show 
 
-    print (show_poster_url)
+    # interested attributes into the dict. 
+    tv_show_info_dict = {
+        'show_name' : tv_show.name,
+        'show_overview' : tv_show.overview,
+        'show_status' : tv_show.status,
+        'number_of_episodes' : tv_show.number_of_episodes,
+        'number_of_seasons' : tv_show.number_of_seasons,
+        'popularity' : tv_show.popularity,
+        'user_score' : tv_show.vote_average,
+        'show_genres' : tv_show.genres, # returns a list of dicts. 
+        'show_homepage' : tv_show.homepage,
+        'show_poster_url' : show_images_dict['secure_base_url'] + show_images_dict['poster_sizes'] + tv_show.poster_path # show poster url
+    }
+    # print (show_poster_url)
 
+    # print (tv_show_info_dict)
 
-    # TODO: make this more meaningful
     # This is for aws lambda return
     body = {
-        "message": "Go Serverless v1.0! Your function executed successfully!",
-        "input": event
+        "message": "Information collected from TMDB api successfully!"
     }
 
     response = {
