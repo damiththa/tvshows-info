@@ -1,0 +1,26 @@
+service: tvshows-info
+
+provider:
+  name: aws
+  runtime: python3.8
+  region: us-east-2
+  stage: prod # default stage, for multi stage deployment use ${opt:stage, 'dev'}
+  versionFunctions: false
+
+  environment:
+    #tmdb
+    TMDB_API_KEY: ${file(./secrets.env.yml):tmdb.TMDB_API_KEY}
+
+functions:
+  # get TV show info from themoviedb api
+  getTVShowsInfo:
+    handler: endpoints/getTVShowsInfo.handler
+    description: Getting TV show info from themoviedb api
+    events:
+      - http:
+          method: POST
+          path: getTVShowsInfo
+      
+    layers:
+      - arn:aws:lambda:us-east-2:113088814899:layer:Klayers-python37-requests:12
+
