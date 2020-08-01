@@ -40,7 +40,7 @@ def handler(event, context):
     }
     # print (show_poster_url)
 
-    # print (tv_show_info_dict)
+    print (tv_show_info_dict)
 
     # This is for aws lambda return
     body = {
@@ -49,8 +49,7 @@ def handler(event, context):
 
     response = {
         "statusCode": 200,
-        "body": json.dumps(body)
+        "body": json.dumps(tv_show_info_dict)
     }
-
     return response
 
