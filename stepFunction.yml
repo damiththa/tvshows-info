@@ -1,0 +1,13 @@
+Comment: A step function to update TV show info.
+StartAt: tvShowInfoUpdate
+States:
+  tvShowInfoUpdate:
+    Type: Task
+    Resource: arn:aws:states:::lambda:invoke
+    Parameters:
+      FunctionName: { "Fn::Join": [ ":", ["arn:aws:lambda:us-east-2", { "Ref": "AWS::AccountId" }, "function:${self:service}-${self:provider.stage}-updateTVShowInfo"]] }
+      Payload:
+        Input.$: "$"
+    Next: endStepFunction
+  endStepFunction:
+    Type: Succeed

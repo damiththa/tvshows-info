@@ -40,6 +40,7 @@ def handler(event, context):
     }
     # print (show_poster_url)
 
+    print ("this is the get TV show info function.")
     print (tv_show_info_dict)
 
     # This is for aws lambda return

@@ -1,9 +1,5 @@
 service: tvshows-info
 
-plugins:
-  - serverless-step-functions
-  - serverless-pseudo-parameters
-
 provider:
   name: aws
   runtime: python3.8
@@ -16,40 +12,40 @@ provider:
     #tmdb
     TMDB_API_KEY: ${file(./secrets.env.yml):tmdb.TMDB_API_KEY}
 
+plugins:
+  - serverless-step-functions
+  - serverless-pseudo-parameters
+ 
 functions:
   # getting TV show info from themoviedb api
   getTVShowsInfo:
-    handler: endpoints/getTVShowsInfo.handler
+    handler: lambdas/endpoints/getTVShowsInfo.handler
     description: Getting TV show info from themoviedb api
     events:
       - http:
           method: POST
           path: getTVShowsInfo
-
     layers:
       - arn:aws:lambda:us-east-2:770693421928:layer:Klayers-python38-requests:9
       - arn:aws:lambda:us-east-2:877428826965:layer:tmdbsimple:3
 
   # updating TV show info
   updateTVShowInfo:
-    handler: endpoints/updateTVShowInfo.handler
-    description: Updating TV show info
-    
+    handler: lambdas/stepFunctionLambdas/updateTVShowInfo.handler
+    description: Updating TV show info    
     layers:
       - arn:aws:lambda:us-east-2:770693421928:layer:Klayers-python38-requests:9
 
 stepFunctions:
+  validate: true
   stateMachines:
-    tvShowInfoUpdate:
-      name: TvShowInfoUpdate
-      definition: 
-        Comment: "Getting and update TV show info."
-        StartAt: UpdateTVShowInfo
-        States:
-          UpdateTVShowInfo:
-            Type: Task
-            Resource: arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:${self:service}-${opt:stage}-updateTVShowInfo
-            ResultPath: $.results.UpdateTVShowInfo
-            End: true
+    updateTVShowInfoStateMachine:
+      name: updateTVShowInfoStateMachine
+      events:
+        - http:
+              path: upate-tv-show-info
+              method: POST
+      definition: ${file(./stepFunction.yml)}
+
 
 

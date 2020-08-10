@@ -4,7 +4,7 @@ import os
 
 def handler(event, context):
 
-    print ('fhfhfhfhfhffh')
+    print ('we came here triggered by step functions- woohoo')
     event = json.loads(event)
     print (event)
 
