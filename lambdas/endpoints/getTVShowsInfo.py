@@ -15,6 +15,8 @@ show_images_dict = {
 
 def handler(event, context):
 
+    print ("We are in get TV show info. function.")
+
     # HARDCODED: for now
     showID = 65798 # LetterKenny
     # showID = 19885 # Sherlock
@@ -39,18 +41,17 @@ def handler(event, context):
         'show_poster_url' : show_images_dict['secure_base_url'] + show_images_dict['poster_sizes'] + tv_show.poster_path # show poster url
     }
     # print (show_poster_url)
+    # print (tv_show_info_dict)
 
-    print ("this is the get TV show info function.")
-    print (tv_show_info_dict)
+    # NOTEME: There is no need to do a lambda return becuase the return of this will be the input of the other lambda.
+    # # This is for aws lambda return
+    # body = {
+    #     "message": "Information collected from TMDB api successfully!"
+    # }
+    # response = {
+    #     "statusCode": 200,
+    #     "body": json.dumps(tv_show_info_dict)
+    # }
 
-    # This is for aws lambda return
-    body = {
-        "message": "Information collected from TMDB api successfully!"
-    }
-
-    response = {
-        "statusCode": 200,
-        "body": json.dumps(tv_show_info_dict)
-    }
-    return response
+    return tv_show_info_dict
 
