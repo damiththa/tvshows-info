@@ -6,6 +6,8 @@ States:
     Resource: arn:aws:states:::lambda:invoke
     Parameters:
       FunctionName: { "Fn::Join": [ ":", ["arn:aws:lambda:us-east-2", { "Ref": "AWS::AccountId" }, "function:${self:service}-${self:provider.stage}-getTVShowsInfo"]] }
+      Payload:
+        Input.$: "$"
     Next: tvShowInfoUpdate
 
   tvShowInfoUpdate:

@@ -11,6 +11,9 @@ provider:
   environment:
     #tmdb
     TMDB_API_KEY: ${file(./secrets.env.yml):tmdb.TMDB_API_KEY}
+    #airTable
+    AIRTABLE_API_KEY: ${file(./secrets.env.yml):airTable.AIRTABLE_API_KEY}
+    BASE_KEY: ${file(./secrets.env.yml):airTable.BASE_KEY}
 
 plugins:
   - serverless-step-functions

@@ -15,20 +15,32 @@ show_images_dict = {
 
 def handler(event, context):
 
-    print ("We are in get TV show info. function.")
+    print ('We are getting tv show info.')
 
-    # HARDCODED: for now
-    showID = 65798 # LetterKenny
-    # showID = 19885 # Sherlock
+    event = json.dumps(event)
+    showEntryInfo_dict = json.loads(event) # getting it as a python dict
+
+    tmdb_showID = showEntryInfo_dict['Input']['tmdb_id']
+    airTable_recordID = showEntryInfo_dict['Input']['rec_id']
+
+    # HARDCODED: for testing
+    # LetterKenny
+    # tmdb_showID = 65798 
+    # airTable_recordID = 'rec7v6jZMZkNflgFz'
+
+    # Sherlock
+    # tmdb_showID = 19885 
+    # airTable_recordID = 'recIvQJMxaew04pSS'
 
     # tv show object
-    tv_show = tmdb.TV(showID)
+    tv_show = tmdb.TV(tmdb_showID)
     res = tv_show.info()
 
     tv_show_info_dict = {} # dict. to hold interested attributes for THIS TV show 
 
     # interested attributes into the dict. 
     tv_show_info_dict = {
+        'airTable_recordID' : airTable_recordID,
         'show_name' : tv_show.name,
         'show_overview' : tv_show.overview,
         'show_status' : tv_show.status,
