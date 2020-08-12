@@ -7,6 +7,12 @@ import tmdbsimple as tmdb
 TMDB_API_KEY = os.environ['TMDB_API_KEY']
 tmdb.API_KEY = TMDB_API_KEY
 
+# tmdb base url for TV
+tmbd_TV_base_url = 'https://www.themoviedb.org/tv/'
+
+# poster not found - default gif
+poster_not_found_url = 'https://media.giphy.com/media/9J7tdYltWyXIY/giphy.gif'
+
 # show images
 show_images_dict = {
     'secure_base_url' : 'https://image.tmdb.org/t/p/',
@@ -19,7 +25,7 @@ def handler(event, context):
 
     event = json.dumps(event)
     showEntryInfo_dict = json.loads(event) # getting it as a python dict
-
+    
     tmdb_showID = showEntryInfo_dict['Input']['tmdb_id']
     airTable_recordID = showEntryInfo_dict['Input']['rec_id']
 
@@ -32,11 +38,31 @@ def handler(event, context):
     # tmdb_showID = 19885 
     # airTable_recordID = 'recIvQJMxaew04pSS'
 
+    # Spy
+    # tmdb_showID = 41703 
+    # airTable_recordID = 'recx4qkJ6ph61Oari'
+
     # tv show object
     tv_show = tmdb.TV(tmdb_showID)
     res = tv_show.info()
 
     tv_show_info_dict = {} # dict. to hold interested attributes for THIS TV show 
+
+    # NOTEME: making sure there is a values in attributes to avoid UPDATE errors. 
+
+    # Show homepage url
+    # If returned (from tmdb) homepage url is NULL, then directing to the page in tmdb
+    if tv_show.homepage is not None: # checking a value for a homepage url
+        show_homepage_url = tv_show.homepage
+    else:
+        show_homepage_url = tmbd_TV_base_url + str(tmdb_showID) + '-' + tv_show.name.replace(" ","-")
+    # print (show_homepage_url)
+
+    # show poster url
+    if tv_show.poster_path is not None: # checking a valur for poster url
+        show_poster_url = show_images_dict['secure_base_url'] + show_images_dict['poster_sizes'] + tv_show.poster_path
+    else:
+        show_poster_url = poster_not_found_url
 
     # interested attributes into the dict. 
     tv_show_info_dict = {
@@ -49,8 +75,8 @@ def handler(event, context):
         'popularity' : tv_show.popularity,
         'user_score' : tv_show.vote_average,
         'show_genres' : tv_show.genres, # returns a list of dicts. 
-        'show_homepage' : tv_show.homepage,
-        'show_poster_url' : show_images_dict['secure_base_url'] + show_images_dict['poster_sizes'] + tv_show.poster_path # show poster url
+        'show_homepage' : show_homepage_url,
+        'show_poster_url' : show_poster_url
     }
     # print (show_poster_url)
     # print (tv_show_info_dict)
