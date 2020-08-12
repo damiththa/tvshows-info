@@ -3,6 +3,7 @@ service: tvshows-info
 provider:
   name: aws
   runtime: python3.8
+  profile: default
   region: us-east-2
   stage: prod # default stage, for multi stage deployment use ${opt:stage, 'dev'}
   versionFunctions: false
@@ -10,17 +11,40 @@ provider:
   environment:
     #tmdb
     TMDB_API_KEY: ${file(./secrets.env.yml):tmdb.TMDB_API_KEY}
+    #airTable
+    AIRTABLE_API_KEY: ${file(./secrets.env.yml):airTable.AIRTABLE_API_KEY}
+    BASE_KEY: ${file(./secrets.env.yml):airTable.BASE_KEY}
 
+plugins:
+  - serverless-step-functions
+  - serverless-pseudo-parameters
+ 
 functions:
-  # get TV show info from themoviedb api
+  # getting TV show info from themoviedb api
   getTVShowsInfo:
-    handler: endpoints/getTVShowsInfo.handler
+    handler: lambdas/endpoints/getTVShowsInfo.handler
     description: Getting TV show info from themoviedb api
-    events:
-      - http:
-          method: POST
-          path: getTVShowsInfo
-      
     layers:
-      - arn:aws:lambda:us-east-2:113088814899:layer:Klayers-python37-requests:12
+      - arn:aws:lambda:us-east-2:770693421928:layer:Klayers-python38-requests:9
+      - arn:aws:lambda:us-east-2:877428826965:layer:tmdbsimple:3
+
+  # updating TV show info
+  updateTVShowInfo:
+    handler: lambdas/stepFunctionLambdas/updateTVShowInfo.handler
+    description: Updating TV show info    
+    layers:
+      - arn:aws:lambda:us-east-2:770693421928:layer:Klayers-python38-requests:9
+
+stepFunctions:
+  validate: true
+  stateMachines:
+    updateTVShowInfoStateMachine:
+      name: updateTVShowInfoStateMachine
+      events:
+        - http:
+              path: upate-tv-show-info
+              method: POST
+      definition: ${file(./stepFunction.yml)}
+
+
 
