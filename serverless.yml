@@ -15,6 +15,7 @@ provider:
     AIRTABLE_URL : ${file(./secrets.env.yml):airTable.AIRTABLE_URL}
     AIRTABLE_API_KEY: ${file(./secrets.env.yml):airTable.AIRTABLE_API_KEY}
     BASE_KEY: ${file(./secrets.env.yml):airTable.BASE_KEY}
+    TBL_TV_SHOWS: ${file(./secrets.env.yml):airTable.TBL_TV_SHOWS}
     TBL_RELATED_TV_SHOWS: ${file(./secrets.env.yml):airTable.TBL_RELATED_TV_SHOWS}
 
 plugins:
