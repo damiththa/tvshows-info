@@ -20,7 +20,6 @@ provider:
 
 plugins:
   - serverless-step-functions
-  - serverless-pseudo-parameters
  
 functions:
   # getting TV show info from themoviedb api
