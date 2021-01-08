@@ -7,6 +7,9 @@ provider:
   region: us-east-2
   stage: prod # default stage, for multi stage deployment use ${opt:stage, 'dev'}
   versionFunctions: false
+  tags:
+    environment: ${self:provider.stage}
+    project: tv-shows
 
   environment:
     #tmdb
@@ -27,7 +30,7 @@ functions:
     handler: lambdas/endpoints/getTVShowsInfo.handler
     description: Getting TV show info from themoviedb api
     layers:
-      - arn:aws:lambda:us-east-2:770693421928:layer:Klayers-python38-requests:9
+      - arn:aws:lambda:us-east-2:770693421928:layer:Klayers-python38-requests:14
       - arn:aws:lambda:us-east-2:877428826965:layer:tmdbsimple:3
 
   # updating TV show info
@@ -35,14 +38,14 @@ functions:
     handler: lambdas/stepFunctionLambdas/updateTVShowInfo.handler
     description: Updating TV show info    
     layers:
-      - arn:aws:lambda:us-east-2:770693421928:layer:Klayers-python38-requests:9
+      - arn:aws:lambda:us-east-2:770693421928:layer:Klayers-python38-requests:14
 
   # getting related TV show info from themoviedb api
   relatedTVShows:
     handler: lambdas/stepFunctionLambdas/relatedTVShows.handler
     description: Getting related TV show info from themoviedb api
     layers:
-      - arn:aws:lambda:us-east-2:770693421928:layer:Klayers-python38-requests:9
+      - arn:aws:lambda:us-east-2:770693421928:layer:Klayers-python38-requests:14
       - arn:aws:lambda:us-east-2:877428826965:layer:tmdbsimple:3
 
 stepFunctions:

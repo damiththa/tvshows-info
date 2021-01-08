@@ -1,6 +1,6 @@
-Comment: A step function to update TV show info.
+Comment: A step function to update TV show info from tmdb and also to get related shows
 StartAt: tvShowInfoGet
-States:
+States:  
   tvShowInfoGet:
     Type: Task
     Resource: arn:aws:states:::lambda:invoke
@@ -18,6 +18,39 @@ States:
       Payload:
         Input.$: "$.Payload" # Getting only the payload at the input
         # Input.$: "$" # NOTEME: Making it like this will send everything (i.e. Payload and metadata) 
-    Next: endStepFunction
-  endStepFunction:
-    Type: Succeed
+    Next: tvShowRelatedShows
+  
+  tvShowRelatedShows:
+    Type: Task
+    Resource: arn:aws:states:::lambda:invoke
+    Parameters:
+      FunctionName: { "Fn::Join": [ ":", ["arn:aws:lambda:us-east-2", { "Ref": "AWS::AccountId" }, "function:${self:service}-${self:provider.stage}-relatedTVShows"]] }
+      Payload:
+        Input.$: "$.Payload" # Getting only the payload at the input
+    End: true
+
+
+
+# Comment: A step function to update TV show info.
+# StartAt: tvShowInfoGet
+# States:
+#   tvShowInfoGet:
+#     Type: Task
+#     Resource: arn:aws:states:::lambda:invoke
+#     Parameters:
+#       FunctionName: { "Fn::Join": [ ":", ["arn:aws:lambda:us-east-2", { "Ref": "AWS::AccountId" }, "function:${self:service}-${self:provider.stage}-getTVShowsInfo"]] }
+#       Payload:
+#         Input.$: "$"
+#     Next: tvShowInfoUpdate
+
+#   tvShowInfoUpdate:
+#     Type: Task
+#     Resource: arn:aws:states:::lambda:invoke
+#     Parameters:
+#       FunctionName: { "Fn::Join": [ ":", ["arn:aws:lambda:us-east-2", { "Ref": "AWS::AccountId" }, "function:${self:service}-${self:provider.stage}-updateTVShowInfo"]] }
+#       Payload:
+#         Input.$: "$.Payload" # Getting only the payload at the input
+#         # Input.$: "$" # NOTEME: Making it like this will send everything (i.e. Payload and metadata) 
+#     Next: endStepFunction
+#   endStepFunction:
+#     Type: Succeed

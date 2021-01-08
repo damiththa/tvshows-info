@@ -19,7 +19,7 @@ TBL_RELATED_TV_SHOWS = os.environ['TBL_RELATED_TV_SHOWS']
 
 # HARDCODED: for testing
 # Spy
-tmdb_showID = 41703 
+# tmdb_showID = 41703 
 
 cutoff_years = 3 # How old a show can be 
 
@@ -50,8 +50,12 @@ def getShowsAlreadyInList():
 
     return showsAlreadyInList_lst
 
-
 def handler(event, context):
+
+    event = json.dumps(event) # getting the object returned in json 
+    tmdbData_dict = json.loads(event)
+    
+    tmdb_showID = tmdbData_dict['Input']['show_tmdbID']
 
     tv_show = tmdb.TV(tmdb_showID)
     similarTVShows = tv_show.similar()

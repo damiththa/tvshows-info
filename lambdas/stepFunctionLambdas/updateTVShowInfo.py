@@ -17,10 +17,14 @@ def handler(event, context):
     # print (showInfo_dict['Input']['show_homepage'])
 
     # # HARDCODED: for testing
-    # showInfo_dict = {'Input': {'airTable_recordID': 'recIvQJMxaew04pSS', 'show_name': 'Sherlock', 'show_overview': 'A modern update finds the famous sleuth and his doctor partner solving crime in 21st century London.', 'show_status': 'Ended', 'number_of_episodes': 12, 'number_of_seasons': 4, 'popularity': 42.808, 'user_score': 8.4, 'show_genres': [{'id': 80, 'name': 'Crime'}, {'id': 18, 'name': 'Drama'}, {'id': 9648, 'name': 'Mystery'}], 'show_homepage': 'http://www.bbc.co.uk/programmes/b018ttws', 'show_poster_url': 'https://image.tmdb.org/t/p/w500/aguWVR8xNilvw7t4X03UvG1hRJr.jpg'}}
+    # showInfo_dict = {'Input': {'airTable_recordID': 'recoRLM7OoZ8cjUfI', 'show_tmdbID': '81292', 'show_name': 'Messiah', 'show_overview': 'A wary CIA officer investigates a charismatic man who sparks a spiritual movement and stirs political unrest. Who exactly is he? And what does he want?', 'show_status': 'Canceled', 'number_of_episodes': 10, 'number_of_seasons': 1, 'popularity': 18.021, 'user_score': 7.4, 'show_genres': [{'id': 18, 'name': 'Drama'}], 'show_homepage': 'https://www.netflix.com/title/80117557', 'show_poster_url': 'https://image.tmdb.org/t/p/w500/psem2jK9GGC0g7dcjb4N5SCYb1u.jpg'}}
 
+    # dict to hold tmdb data to pass to other lambda
+    tmdb_data_dict = {
+        "show_tmdbID" : showInfo_dict['Input']['show_tmdbID'] # show tmdb ID
+    } 
 
-    # Setting up record to do the update
+    # Setting up record to do the airtable update
     showRecodEntry = {
       "id": showInfo_dict['Input']['airTable_recordID'],
       "fields": {
@@ -55,14 +59,20 @@ def handler(event, context):
     # print (res.status_code)
     # print (res.content)
 
-    # This is for aws lambda return
-    body = {
-        "message": "Update TV Show info - successful!!"
-    }
-    response = {
-        "statusCode": 200,
-        "body": json.dumps(body)
-    }
+    if (res.status_code) == 200:
+        print ('TV show update was a success !!!')
+    else:
+        print ('TV show update was unsuccessful !!!')
 
-    return response
+    # NOTEME: There is no need to do a lambda return becuase the return of this will be the input of the other lambda.
+    # # This is for aws lambda return
+    # body = {
+    #     "message": "Update TV Show info - successful!!"
+    # }
+    # response = {
+    #     "statusCode": 200,
+    #     "body": json.dumps(body)
+    # }
+
+    return tmdb_data_dict
 

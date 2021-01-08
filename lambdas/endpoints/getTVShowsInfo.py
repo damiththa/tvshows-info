@@ -67,6 +67,7 @@ def handler(event, context):
     # interested attributes into the dict. 
     tv_show_info_dict = {
         'airTable_recordID' : airTable_recordID,
+        'show_tmdbID' : tmdb_showID,
         'show_name' : tv_show.name,
         'show_overview' : tv_show.overview,
         'show_status' : tv_show.status,
@@ -79,7 +80,8 @@ def handler(event, context):
         'show_poster_url' : show_poster_url
     }
     # print (show_poster_url)
-    # print (tv_show_info_dict)
+    print ("TV show info dict. created.")
+    print (tv_show_info_dict)
 
     # NOTEME: There is no need to do a lambda return becuase the return of this will be the input of the other lambda.
     # # This is for aws lambda return
