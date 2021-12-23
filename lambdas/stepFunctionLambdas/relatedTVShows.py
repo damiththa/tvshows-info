@@ -21,6 +21,8 @@ TBL_RELATED_TV_SHOWS = os.environ['TBL_RELATED_TV_SHOWS']
 # Spy
 # tmdb_showID = 41703 
 
+# THIS IS A TEST, DELETEME later
+
 cutoff_years = 3 # How old a show can be 
 
 # Getting TV show already in related 
